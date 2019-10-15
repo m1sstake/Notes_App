@@ -1,17 +1,24 @@
 <template>
-  <div class="message">
+  <div class="message" v-if="message">
     <p>{{ message }}</p>
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-    message: {
-      type: String,
-      required: true
+  data () {
+    return {
+      message: null
     }
-  }
+  },
+   created () {
+     this.$store.watch(
+       (state,getters) => getters.getErrorMessage,
+       (text) => {
+         this.message = text
+       }
+     )
+  },
 }
 </script>
 

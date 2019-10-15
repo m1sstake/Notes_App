@@ -13,24 +13,22 @@
 
 <script>
 export default {
-  props: {
-    value: {
-      type: String,
-      required: true
-    },
-    placeholder: {
-      type: String,
-      default: 'Search'
-    }
-  },
   data () {
-    return { search: this.value }
+    return { search: null, placeholder: 'Find your note' }
   },
   watch: {
     search (val) {
-      // console.log(val)
-      this.$emit('search', val);
+      this.$store.dispatch('setSearch',val)
     }
+  },
+  created () {
+    this.search = this.$store.getters.getSearch
+    this.$store.watch(
+       (state,getters) => getters.getSearch,
+       (search) => {
+         this.search = search
+       }
+     )
   }
 }
 </script>

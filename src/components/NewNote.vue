@@ -2,9 +2,10 @@
   <!-- new note -->
   <div class="new-note">
     <div class = "importance">
-    <label>Low Priority<input type="radio" value = "Low"  v-model="note.importance"></label>
-    <label>Medium Priority<input type="radio"  value = "Medium"  v-model="note.importance"></label>
-    <label>High Priority<input type="radio" value = "High" v-model="note.importance" ></label>
+     <label v-for="(imp, index) in impList" :key="index">
+       {{ imp }}
+       <input type="radio" v-model="note.imp" :value="imp">
+     </label>
     </div>
     <label>Title</label>
     <input v-model="note.title" type="text">
@@ -19,23 +20,33 @@
 export default {
   data() {
     return {
-      checkData: true
+      impList:null,
+      note: {
+        title: '',
+        descr: '',
+        imp: 'Low',
+        date: null,
+      }
     }
   },
-  props: {
-    note: {
-      type: Object,
-      required: true
-    }
+   mounted () {
+    this.impList = this.$store.getters.getImp
+
   },
   methods: {
-    Test () {
-      return true
-    },
     addNote () {
-      // console.log(this.note);
-      this.$emit('addNote', this.note)
-      this.note.importance = 'Low'
+      let {title, descr, imp} = this.note
+      if (title === '') {
+        this.message = this.$store.dispatch('addMessage','title can`t be blank!')
+        this.note.imp = 'Low'
+        return false
+      }
+      this.note.date = new Date(Date.now()).toLocaleString()
+      
+      this.$store.dispatch('addNote', this.note)
+      this.note.imp = 'Low'
+      this.note.title = ''
+      this.note.descr = ''
     }
   }
 }

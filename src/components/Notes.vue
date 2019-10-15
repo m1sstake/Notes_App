@@ -1,49 +1,63 @@
 <template>
   <!-- note list -->
   <div class="notes">
-    <div class="note" :class="{ full: !grid }" v-for="(note, index) in notes" :key="index">
+    <div class="note" :class="{ full: grid }" v-for="(note, index) in notes" :key="index">
       <div class="note-header" :class="{ full: !grid }" >
         <input class ="change active" type="text" v-if = "change" 
         v-model="note.title"
         @keyup.enter="changeTitle" 
         @keyup.esc="changeTitle">
-        <p class="title" @click="changeTitle" v-else>{{ note.title }}</p>
+        <p class="title" @click="changeTitle">{{ note.title }}</p>
         <p class="cancel" @click="removeNote(index)">x</p>
       </div>
       <div class="note-body">
         <p>{{ note.descr }}</p>
         <span>{{ note.date }}</span> 
-        <div :class = "(note.importance).toLowerCase()">{{ note.importance }} Priority</div>
+        <div :class = "getClass(note.imp)">{{ note.imp }} Priority</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+// TODO - fix change title input
 export default {
-  props: {
-    notes: {
-      type: Array,
-      required: true
-    },
-    grid: {
-      type: Boolean,
-      required: true
-    }
-  },
   data() {
     return {
       change: false,
+      notes: null
     }
+  },
+  props: {
+    grid: {
+      type:Boolean,
+      required:true
+    }
+  },
+  created () {
+    this.notes = this.$store.getters.notesFilter
+    this.$store.watch(
+       (state,getters) => getters.notesFilter,
+       (notes) => {
+         this.notes = notes
+       }
+     )
   },
   methods: {
     removeNote (index) {
-      this.$emit('remove', index)
+      this.$store.dispatch('removeNote', index)
     },
-    changeTitle: function () {
+    changeTitle () {
       this.change = !this.change
     },
-  }
+    getClass (imp) {
+      return imp.toLowerCase()
+    },
+    getGridValue() {
+      return this.$store.getters.getGridValue
+    }
+  },
+  
 }
 </script>
 
