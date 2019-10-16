@@ -3,11 +3,11 @@
   <div class="notes">
     <div class="note" :class="{ full: grid }" v-for="(note, index) in notes" :key="index">
       <div class="note-header" :class="{ full: !grid }" >
-        <input class ="change active" type="text" v-if = "change" 
-        v-model="note.title"
-        @keyup.enter="changeTitle" 
-        @keyup.esc="changeTitle">
-        <p class="title" @click="changeTitle">{{ note.title }}</p>
+        <input class ="change active" type="text" v-show="note.change"
+        :value="note.title"
+        @keyup.enter="changeTitle(index, $event.target.value)"
+        @keyup.esc="changeTitleFalse(index)">
+        <p class="title" @click="changeTitleTrue(index)" v-show="!note.change">{{ note.title }}</p>
         <p class="cancel" @click="removeNote(index)">x</p>
       </div>
       <div class="note-body">
@@ -24,8 +24,8 @@
 export default {
   data() {
     return {
-      change: false,
-      notes: null
+      notes: null,
+      inputData: ''
     }
   },
   props: {
@@ -47,14 +47,23 @@ export default {
     removeNote (index) {
       this.$store.dispatch('removeNote', index)
     },
-    changeTitle () {
-      this.change = !this.change
+    changeTitleTrue (index) {
+      const changeTitle = {index, bool:true}
+      this.$store.dispatch('setNoteChange', changeTitle)
+    },
+    changeTitleFalse (index) {
+      const changeTitle = {index, bool:false}
+      this.$store.dispatch('setNoteChange', changeTitle)
+    },
+    changeTitle (index, title) {
+      const store = this.$store.dispatch
+      const obj = {index, title}
+      store('changeNoteTitle', obj)
+      const changeTitle = {index, bool:false}
+      store('setNoteChange', changeTitle)
     },
     getClass (imp) {
       return imp.toLowerCase()
-    },
-    getGridValue() {
-      return this.$store.getters.getGridValue
     }
   },
   
@@ -92,9 +101,10 @@ export default {
   justify-content: space-between;
   .change {
     &.active {
+      margin-top: 5px;
       display: flex;
       height: 20px;
-      width: 300px;
+      width: 260px;
       color: #402caf;
       font-size: 22px;
       opacity: 100;

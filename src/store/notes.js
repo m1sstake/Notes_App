@@ -5,19 +5,22 @@ export default {
         title: 'First Note',
         descr: 'Description for first note',
         date: new Date(Date.now()).toLocaleString(),
-        imp: 'Medium'
+        imp: 'Medium',
+        change: false
       },
       {
         title: 'Second Note',
         descr: 'Description for second note',
         date: new Date(Date.now()).toLocaleString(),
-        imp: 'Low'
+        imp: 'Low',
+        change: false
       },
       {
         title: 'Third Note',
         descr: 'Description for third note',
         date: new Date(Date.now()).toLocaleString(),
-        imp: 'High'
+        imp: 'High',
+        change: false
       }
     ],
     importance: ['Low','Medium','High'],
@@ -50,6 +53,12 @@ export default {
     },
     setSearch(state, val) {
       state.search = val
+    },
+    setNoteChange(state, obj){
+      state.notes[obj.index].change = obj.bool
+    },
+    changeNoteTitle(state, obj) {
+      state.notes[obj.index].title = obj.title
     }
   },
   actions: {
@@ -70,6 +79,12 @@ export default {
     },
     setSearch({ commit }, val) {
       commit('setSearch', val)
+    },
+    setNoteChange({ commit }, obj) {
+      commit('setNoteChange', obj)
+    },
+    changeNoteTitle({ commit }, obj) {
+      commit('changeNoteTitle', obj)
     }
   },
   getters: {
