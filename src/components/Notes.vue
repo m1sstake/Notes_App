@@ -58,7 +58,7 @@ export default {
     changeTitle (index, title) {
       const store = this.$store.dispatch
       if (title == "") {
-        this.$store.dispatch('addMessage','title can`t be blank!')
+        store('addMessage','title can`t be blank!')
         this.changeTitleFalse(index)
       }
       else {
