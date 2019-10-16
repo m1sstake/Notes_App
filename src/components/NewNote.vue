@@ -37,7 +37,7 @@ export default {
     addNote () {
       let {title, descr, imp} = this.note
       if (title === '') {
-        this.message = this.$store.dispatch('addMessage','title can`t be blank!')
+        this.$store.dispatch('addMessage','title can`t be blank!')
         this.note.imp = 'Low'
         return false
       }

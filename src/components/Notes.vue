@@ -57,10 +57,15 @@ export default {
     },
     changeTitle (index, title) {
       const store = this.$store.dispatch
-      const obj = {index, title}
-      store('changeNoteTitle', obj)
-      const changeTitle = {index, bool:false}
-      store('setNoteChange', changeTitle)
+      if (title == "") {
+        this.$store.dispatch('addMessage','title can`t be blank!')
+        this.changeTitleFalse(index)
+      }
+      else {
+        const obj = {index, title}
+        store('changeNoteTitle', obj)
+        this.changeTitleFalse(index)
+      }
     },
     getClass (imp) {
       return imp.toLowerCase()
